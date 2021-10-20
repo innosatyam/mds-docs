@@ -15,8 +15,6 @@ import {
   CardHeader,
   CardBody,
   Button,
-  TabsWrapper,
-  Tab,
   Heading,
   Icon,
 } from '@innovaccer/design-system';
@@ -25,6 +23,7 @@ import {
   LiveEditor,
   LiveError,
   LivePreview,
+  withLive
 } from 'react-live';
 import { ArgsTable } from './Table.tsx';
 
@@ -54,52 +53,27 @@ ${customCode}
   }
 };
 
-const rows = {
-  appearance: {
-    description: 'Color of the `Button`',
-    name: 'appearance',
-    default: 'basic',
-    table: {
-      defaultValue: {
-        summary: '"basic"',
-      },
-      jsDocTags: undefined,
-      type: {
-        summary:
-          'undefined | "primary" | "alert" | "success" | "basic" | "transparent"',
-      },
-    },
-  },
-};
-
 const StoryComp = ({
   componentData,
   showArgsTable = true,
-  htmlData,
   propData = {},
 }) => {
   const testRef = useRef(null);
   const [zoom, setZoom] = useState(1);
-  const [activeTab, setActiveTab] = React.useState(0);
-
-  const [jsxCode, setJsxCode] = React.useState(
-    getRawPreviewCode(componentData)
-  );
-
-  const html = beautifyHTML(htmlData,
-    beautifyHTMLOptions
-  );
-  const [htmlCode, setHtmlCode] = useState(html);
+  const [htmlCode, setHtmlCode] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeButton, setActiveButton] = useState('React');
 
-  const renderHTMLTab = () => {
-    return (
-      <Tab label={<Button>HTML</Button>}>
-        {renderCodeBlock(htmlCode)}
-      </Tab>
-    );
-  };
+  const [jsxCode, setJsxCode] = React.useState(getRawPreviewCode(componentData));
+
+  const TabsWrap = withLive(({ live }) => {
+    const { element: Element } = live;
+    try {
+      const htmlValue = beautifyHTML(renderToStaticMarkup(<Element />), beautifyHTMLOptions);
+      setHtmlCode(htmlValue);
+    } catch (e) { }
+    return null;
+  });
 
   const renderCodeBlock = (val) => (
     <div>
@@ -120,8 +94,7 @@ const StoryComp = ({
     </div>
   );
 
-  const copyCode = (val) =>
-    navigator.clipboard.writeText(val);
+  const copyCode = (val) => { navigator.clipboard.writeText(val); }
 
   const CopyCode = (props) => {
     const { onClick } = props;
@@ -213,7 +186,7 @@ const StoryComp = ({
               </div>
             </CardBody>
           </Card>
-
+          <TabsWrap />
           {isExpanded && (
             <Card
               shadow='light'

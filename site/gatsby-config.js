@@ -10,6 +10,7 @@ module.exports = {
       options: {
         username: `innovaccer-tech`,
       },
-    }
+    },
+    `gatsby-transformer-json-key-value-to-array`
   ],
 }
