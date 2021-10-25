@@ -18,8 +18,6 @@ import * as MDSComponents from '@innovaccer/design-system';
 import Meta from './Meta';
 import '../css/style.css';
 import PropsTable from '../components/PropsTable/index';
-import jsonData from '../util/componentsData/StorybookData.json';
-import htmlData from '../util/componentsData/htmlData.json';
 import Rules from './Rules/Rules';
 import DOs from './Rules/DOs';
 import DONTs from './Rules/DONTs';
@@ -28,6 +26,7 @@ import IconWrapper from './Rules/IconWrapper';
 import Footer from './Footer/Footer';
 import ProductLogos from '../components/Logos/Logos';
 import ProductColors from '../components/Colors/Colors';
+import { getStorybookData } from '../util/StorybookData';
 
 const copyToClipboard = (str) => {
   let codeBlock = '';
@@ -57,7 +56,7 @@ const Code = ({ children, ...rest }) => {
   );
 };
 
-const List = ({children, ...rest}) => {
+const List = ({ children, ...rest }) => {
   return (
     <div className='list'>
       {children}
@@ -88,47 +87,21 @@ const Layout = ({
   const [isToastActive, setIsToastActive] = useState(false);
   const [toastTitle, setToastTitle] = useState('');
 
+
   function getJsxCode(name) {
-    let keys = Object.keys(jsonData).filter((key) =>
-      key.includes(pageTitle.toLowerCase())
-    );
+    const componentData = getStorybookData(name);
 
-    const variantName = keys.filter((elt) =>
-      elt.includes(name)
-    );
-
-    const jsxCode = variantName.length
-      ? jsonData[variantName[0]].parameters.storySource
-          .source
+    const jsxCode = componentData
+      ? componentData.parameters.storySource.source
       : '';
     return jsxCode;
   }
 
-    function getHTMLCode(name) {
-      let keys = Object.keys(htmlData).filter((key) =>
-        key.includes(pageTitle.toLowerCase())
-      );
-      
-      const variantName = keys.filter((elt) =>
-        elt.includes(name)
-      );
-
-      const jsxCode = variantName.length
-        ? htmlData[variantName[0]].html
-        : '';
-      return jsxCode;
-    }
-
   function getPropTableData(name) {
-    let keys = Object.keys(jsonData).filter((key) =>
-      key.includes(pageTitle.toLowerCase())
-    );
+    const componentData = getStorybookData(name);
 
-    const variantName = keys.filter((elt) =>
-      elt.includes(name)
-    );
-    const jsxCode = variantName.length
-      ? jsonData[variantName[0]].parameters.argTypes
+    const jsxCode = componentData
+      ? componentData.parameters.argTypes
       : '';
     return jsxCode;
   }
@@ -140,7 +113,6 @@ const Layout = ({
         <PropsTable
           componentData={getJsxCode(name)}
           showArgsTable={false}
-          htmlData={getHTMLCode(name)}
         />
       </>
     );
@@ -169,10 +141,10 @@ const Layout = ({
 
   const Logos = ({ children, logoData, ...rest }) => {
     return (
-        <ProductLogos
-          logoData={logoData}
-          toggleToast={toggleToast}
-        />
+      <ProductLogos
+        logoData={logoData}
+        toggleToast={toggleToast}
+      />
     );
   };
 
@@ -182,14 +154,14 @@ const Layout = ({
     );
   };
 
-    const Colors = ({ children, colorData, ...rest }) => {
-      return (
-        <ProductColors
-          colorData={colorData}
-          toggleToast={toggleToast}
-        />
-      );
-    };
+  const Colors = ({ children, colorData, ...rest }) => {
+    return (
+      <ProductColors
+        colorData={colorData}
+        toggleToast={toggleToast}
+      />
+    );
+  };
 
   const DSComponents = {
     ...MDSComponents,
