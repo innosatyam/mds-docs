@@ -1,6 +1,6 @@
 import { useStaticQuery, graphql } from 'gatsby';
 
-export function MediumBlogs() {
+export default function MediumBlogs() {
   const {
     allMediumPost: { edges },
   } = useStaticQuery(graphql`

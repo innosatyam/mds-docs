@@ -17,3 +17,7 @@
 .sticky-bottom {
   bottom: var(--spacing-2);
 }
+
+.gatsby-image-wrapper [data-placeholder-image] {
+  background-color: var(--white) !important;
+}

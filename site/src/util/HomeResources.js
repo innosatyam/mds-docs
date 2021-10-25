@@ -1,18 +1,19 @@
 import { useStaticQuery, graphql } from 'gatsby';
 
-export default function useHomeMenu() {
+export default function useHomeResources() {
   const {
-    allHomeMenuYaml: { edges },
+    allHomeResourcesYaml: { edges },
   } = useStaticQuery(graphql`
-    query HOME_QUERY {
-      allHomeMenuYaml {
+    query HOME_RESOURCES {
+      allHomeResourcesYaml {
         edges {
           node {
-            name
+            description
             link
-            content
-            icon
-            appearance
+            name
+            imgSrc {
+              publicURL
+            }
           }
         }
       }
