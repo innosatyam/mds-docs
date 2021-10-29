@@ -10,6 +10,8 @@
   margin: 0.5em 0;
   padding: 1em;
   overflow: auto;
+  display: flex;
+  align-items: flex-start;
 }
 
 /**
@@ -28,4 +30,9 @@
   min-width: 100%; /* 2 */
   display: flex;
   justify-content: space-between;
+}
+
+code[class*="language-"] {
+  background: transparent !important;
+  white-space: pre-wrap !important;
 }

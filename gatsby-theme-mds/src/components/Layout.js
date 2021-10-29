@@ -30,16 +30,19 @@ import { getStorybookData } from '../util/StorybookData';
 
 const copyToClipboard = (str) => {
   let codeBlock = '';
-  if (Array.isArray(str)) {
-    str.map((elt) => {
-      if (typeof elt === 'object') {
-        codeBlock = codeBlock + elt.props.children;
-      } else {
-        codeBlock = codeBlock + elt;
-      }
-    });
-  } else {
-    codeBlock = str;
+  if (Object.keys(str).length > 0) {
+    const element = str.props.children;
+    if (Array.isArray(element) && element.length) {
+      element.map((elt) => {
+        if (typeof elt === 'object') {
+          codeBlock = codeBlock + elt.props.children;
+        } else {
+          codeBlock = codeBlock + elt;
+        }
+      });
+    } else {
+      codeBlock = str.props.children;
+    }
   }
   navigator.clipboard.writeText(codeBlock);
 };
@@ -50,6 +53,7 @@ const Code = ({ children, ...rest }) => {
       <div {...rest}>{children}</div>
       <Button
         icon='copy'
+        className='ml-auto p-0'
         onClick={() => copyToClipboard(children)}
       />
     </>
@@ -165,7 +169,7 @@ const Layout = ({
 
   const DSComponents = {
     ...MDSComponents,
-    code: Code,
+    pre: Code,
     Preview: Preview,
     PreviewWithPropTable: PreviewWithPropTable,
     Rules,

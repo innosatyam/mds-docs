@@ -19032,7 +19032,7 @@
     "story": "All",
     "parameters": {
       "storySource": {
-        "source": "() => {\n  const hoverable = boolean('hoverable', true);\n  const [expanded, setExpanded] = React.useState(false);\n\n  return (\n    <div className=\"d-flex\">\n      <Collapsible expanded={expanded} hoverable={hoverable} height=\"100vh\" onToggle={setExpanded}>\n        <div className=\"d-flex pt-4\">\n          <Icon name=\"events\" className=\"d-flex align-items-center px-5\" />\n          {expanded && <Text className=\"mr-6\">Collapsible</Text>}\n        </div>\n      </Collapsible>\n      <div>Testing</div>\n    </div>\n  );\n}"
+        "source": "() => {\n  const hoverable = boolean('hoverable', true);\n  const [expanded, setExpanded] = React.useState(false);\n\n  return (\n    <div className=\"d-flex\">\n      <Collapsible expanded={expanded} hoverable={hoverable} height=\"100vh\" onToggle={setExpanded}>\n        <div className=\"d-flex pt-4\">\n          <Icon name=\"events\" className=\"d-flex align-items-center px-5 Text--regular\" />\n          {expanded && <Text className=\"mr-6\">Collapsible</Text>}\n        </div>\n      </Collapsible>\n      <div>Testing</div>\n    </div>\n  );\n}"
       },
       "__id": "components-collapsible-all--all",
       "args": {},
@@ -56167,7 +56167,7 @@
     "story": "All",
     "parameters": {
       "storySource": {
-        "source": "() => {\n  const [fileNames, setFileNames] = React.useState<any>([]);\n\n  const title = text('title', 'Upload files');\n  const formatLabel = text('formatLabel', 'Accepted formats: PDF, jpg');\n  const sizeLabel = text('sizeLabel', 'Maximum size: 25 MB');\n  const multiple = boolean('multiple', true);\n\n  const onChangeHandler = (fileList: File[]) => {\n    const files = fileList.map((file) => {\n      return {\n        file,\n        status: 'completed',\n      };\n    });\n\n    setFileNames(files);\n  };\n\n  return (\n    <div>\n      <FileUploader\n        onChange={onChangeHandler}\n        multiple={multiple}\n        title={title}\n        formatLabel={formatLabel}\n        sizeLabel={sizeLabel}\n        sampleFileLink={\n          <Link\n            href=\"http://www.adobe.com/content/dam/Adobe/en/accessibility/pdfs/accessing-pdf-sr.pdf\"\n            download=\"Test.pdf\"\n            target=\"_blank\"\n          >\n            Download sample file\n          </Link>\n        }\n      />\n      <FileUploaderList fileList={fileNames} className=\"mt-4\" />\n    </div>\n  );\n}"
+        "source": "() => {\n  const [fileNames, setFileNames] = React.useState<FileItem[]>([]);\n  const [errorOccured, setErrorOccured] = React.useState(false);\n\n  const title = text('title', 'Upload files');\n  const formatLabel = text('formatLabel', 'Accepted formats: pdf, jpg, jpeg, png');\n  const sizeLabel = text('sizeLabel', 'Maximum size: 25 MB');\n  const multiple = boolean('multiple', true);\n\n  const randomBetween = (value: number) => Math.round(Math.random() * value);\n\n  const imitateUploading = (fileItem: FileItem) => {\n    const randomProgressChunks = [5, 8, 13];\n    const randomChunkIndex = randomBetween(randomProgressChunks.length - 1);\n    const progressChunk = randomProgressChunks[randomChunkIndex];\n    let baseProgress = fileItem.progress || 0;\n\n    const increment = () => {\n      baseProgress += progressChunk;\n      setProgressFileName(fileItem, baseProgress);\n\n      if (baseProgress < 100) {\n        setTimeout(() => increment(), 100);\n      }\n    };\n\n    increment();\n  };\n\n  const setProgressFileName = (fileName: FileItem, progress = 0) => {\n    setFileNames((previousFileNames) => {\n      const fileNameIndex = previousFileNames.findIndex((fn) => fn.file === fileName.file);\n\n      if (fileNameIndex === -1) {\n        return [...previousFileNames, fileName];\n      }\n\n      return previousFileNames.map((previousFileName, index) => {\n        if (fileNameIndex !== index) return previousFileName;\n\n        return {\n          ...previousFileName,\n          progress,\n          status: progress >= 100 ? 'completed' : 'uploading',\n        };\n      });\n    });\n  };\n\n  const uploadFiles = (fileList: File[]) => {\n    if (!errorOccured && (fileList.length > 1 || fileNames.length > 0)) {\n      const randomErrorIndex = randomBetween(fileList.length - 1);\n      setFileNames((previousFileNames) => [\n        ...previousFileNames,\n        { file: fileList[randomErrorIndex], status: 'error' },\n      ]);\n      setErrorOccured(true);\n\n      if (fileList.length <= 1) {\n        return;\n      }\n\n      fileList.splice(randomErrorIndex, 1);\n    }\n\n    fileList.forEach((file) => {\n      const fileItem: FileItem = {\n        file,\n        status: 'uploading',\n        progress: 0,\n      };\n\n      imitateUploading(fileItem);\n    });\n  };\n\n  const retryUploadFile = (file: File) => {\n    uploadFiles([file]);\n  };\n\n  const deleteUploadedFile = (file: File) => {\n    setFileNames((previousFileNames) => previousFileNames.filter((fileName) => fileName.file !== file));\n  };\n\n  return (\n    <div>\n      <FileUploader\n        onChange={uploadFiles}\n        multiple={multiple}\n        title={title}\n        formatLabel={formatLabel}\n        sizeLabel={sizeLabel}\n        accept={['image/png', 'application/pdf', 'image/jpeg']}\n        sampleFileLink={\n          <Link\n            href=\"http://www.adobe.com/content/dam/Adobe/en/accessibility/pdfs/accessing-pdf-sr.pdf\"\n            download=\"Test.pdf\"\n            target=\"_blank\"\n          >\n            Download sample file\n          </Link>\n        }\n      />\n      <FileUploaderList onDelete={deleteUploadedFile} onRetry={retryUploadFile} fileList={fileNames} className=\"mt-4\" />\n    </div>\n  );\n}"
       },
       "__id": "components-fileuploader-all--all",
       "args": {},
@@ -81305,84 +81305,6 @@
             "defaultValue": {
               "summary": "true"
             }
-          }
-        }
-      },
-      "__isArgsStory": false
-    },
-    "args": {},
-    "initialArgs": {}
-  },
-  "components-outsideclick-all--all": {
-    "id": "components-outsideclick-all--all",
-    "kind": "Components/OutsideClick/All",
-    "name": "All",
-    "story": "All",
-    "parameters": {
-      "storySource": {
-        "source": "() => {\n  return (\n    <OutsideClick className=\"d-inline-block\" onOutsideClick={action('outside click')}>\n      <Card\n        className=\"d-flex align-items-center justify-content-center\"\n        style={{ height: 200, width: 200 }}\n        onClick={action('inside click')}\n      >\n        <Heading>Card</Heading>\n      </Card>\n    </OutsideClick>\n  );\n}"
-      },
-      "__id": "components-outsideclick-all--all",
-      "args": {},
-      "argTypes": {
-        "onOutsideClick": {
-          "name": "onOutsideClick",
-          "description": "Trigger the function on outside click",
-          "type": {
-            "required": true,
-            "name": "function",
-            "value": "(event: Event) => void"
-          },
-          "table": {
-            "type": {
-              "summary": "(event: Event) => void"
-            },
-            "defaultValue": null
-          }
-        },
-        "children": {
-          "name": "children",
-          "description": "Element to be rendered",
-          "type": {
-            "required": true,
-            "name": "other",
-            "value": "ReactElement<any, string | ((props: any) => ReactElement<any, any> | null) | (new (props: any) => Component<any, any, any>)>"
-          },
-          "table": {
-            "type": {
-              "summary": "ReactElement<any, string | ((props: any) => ReactElement<any, any> | null) | (new (props: any) => Component<any, any, any>)>"
-            },
-            "defaultValue": null
-          }
-        },
-        "className": {
-          "name": "className",
-          "description": "Adds custom class",
-          "type": {
-            "required": false,
-            "name": "other",
-            "value": "string | undefined"
-          },
-          "table": {
-            "type": {
-              "summary": "string | undefined"
-            },
-            "defaultValue": null
-          }
-        },
-        "data-test": {
-          "name": "data-test",
-          "description": "Stores custom testing data private to the component.",
-          "type": {
-            "required": false,
-            "name": "other",
-            "value": "string | undefined"
-          },
-          "table": {
-            "type": {
-              "summary": "string | undefined"
-            },
-            "defaultValue": null
           }
         }
       },
@@ -116107,16 +116029,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-align--align": {
-    "id": "others-utilities-align--align",
-    "kind": "Others/Utilities/Align",
+  "others-styles-align--align": {
+    "id": "others-styles-align--align",
+    "kind": "Others/Styles/Align",
     "name": "Align",
     "story": "Align",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'align-baseline',\n      properties: 'vertical-align: baseline ;',\n    },\n    {\n      className: 'align-top',\n      properties: 'vertical-align: top ;',\n    },\n    {\n      className: 'align-middle',\n      properties: 'vertical-align: middle ;',\n    },\n    {\n      className: 'align-bottom',\n      properties: 'vertical-align: bottom ;',\n    },\n    {\n      className: 'align-text-bottom',\n      properties: 'vertical-align: text-bottom ;',\n    },\n    {\n      className: 'align-text-top',\n      properties: 'vertical-align: text-top ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Vertical alignment</Heading>\n      <br />\n      &nbsp;\n      <Text weight=\"strong\">Change the vertical alignment of inline, inline-block, inline-table </Text>\n      &nbsp;\n      <div\n        style={{\n          height: '250px',\n        }}\n        className=\"mt-5 mb-8\"\n      >\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            size={'standard'}\n            headerOptions={{\n              withSearch: true,\n            }}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"pl-10 h-25 Utilities-example w-50\">\n        <span className=\"align-baseline\">baseline </span>\n        <span className=\"align-top\">top </span>\n        <span className=\"align-middle\">middle </span>\n        <span className=\"align-bottom\">bottom </span>\n        <span className=\"align-text-top\">text-top </span>\n        <span className=\"align-text-bottom\">text-bottom </span>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock w-50 pl-10\">\n        {'<span className=\"align-baseline\">baseline </span>'}\n        <br />\n        {'<span className=\"align-top\">top </span>'}\n        <br />\n        {'<span className=\"align-middle\">middle </span>'}\n        <br />\n        {'<span className=\"align-bottom\">bottom </span>'}\n        <br />\n        {'<span className=\"align-text-top\">text-top </span>'}\n        <br />\n        {'<span className=\"align-text-bottom\">text-bottom </span>'}\n        <br />\n      </div>\n      &nbsp;\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-align--align",
+      "__id": "others-styles-align--align",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116124,16 +116046,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-background--background": {
-    "id": "others-utilities-background--background",
-    "kind": "Others/Utilities/Background",
+  "others-styles-background--background": {
+    "id": "others-styles-background--background",
+    "kind": "Others/Styles/Background",
     "name": "Background",
     "story": "Background",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'bg-primary',\n      properties: 'background-color: var(--primary);',\n    },\n    {\n      className: 'bg-secondary',\n      properties: 'background-color: var(--secondary);',\n    },\n    {\n      className: 'bg-secondary-lighter',\n      properties: 'background-color: var(--secondary-lighter);',\n    },\n    {\n      className: 'bg-secondary-lightest',\n      properties: 'background-color: var(--secondary-lightest);',\n    },\n    {\n      className: 'bg-success',\n      properties: 'background-color: var(--success);',\n    },\n    {\n      className: 'bg-warning',\n      properties: 'background-color: var(--warning);',\n    },\n    {\n      className: 'bg-danger',\n      properties: 'background-color: var(--alert);',\n    },\n    {\n      className: 'bg-light',\n      properties: 'background-color: var(--white);',\n    },\n    {\n      className: 'bg-dark',\n      properties: 'background-color: var(--inverse);',\n    },\n    {\n      className: 'bg-transparent',\n      properties: 'background-color: transparent;',\n    },\n  ];\n\n  return (\n    <div>\n      <Heading size=\"xxl\">Background color</Heading>\n      <br />\n      <Text weight=\"strong\">Easily set the background of an element to any contextual class</Text>\n      <div\n        style={{\n          height: '250px',\n        }}\n        className=\"mt-5 mb-8\"\n      >\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"p-7 mb-4 bg-primary\">.bg-primary</div>\n      <div className=\"p-7 mb-4 bg-secondary\">.bg-secondary</div>\n      <div className=\"p-7 mb-4 bg-secondary-lighter\">.bg-secondary-lighter</div>\n      <div className=\"p-7 mb-4 bg-secondary-lightest\">.bg-secondary-lightest</div>\n      <div className=\"p-7 mb-4 bg-success \">.bg-success</div>\n      <div className=\"p-7 mb-4 bg-danger \">.bg-danger</div>\n      <div className=\"p-7 mb-4 bg-warning text-dark\">.bg-warning</div>\n      <div className=\"p-7 mb-4 bg-light text-dark\">.bg-light</div>\n      <div className=\"p-7 mb-4 bg-transparent text-dark\">.bg-transparent</div>\n      <div className=\"p-7 mb-4 bg-dark Utilities-text--color\">.bg-dark</div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock pb-5 pt-5 pl-5\">\n        {'<div className=\"p-7 mb-4 bg-primary\" >.bg-primary </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-secondary\">.bg-secondary </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-secondary-lighter\">.bg-secondary-lighter</div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-secondary-lightest\">.bg-secondary-lightest</div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-success\">.bg-success </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-danger\">.bg-danger </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-warning\">.bg-warning </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-light\">.bg-light </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-transparent\">.bg-transparent </div>'}\n        <br />\n        {'<div className=\"p-7 mb-4 bg-dark\">.bg-dark </div>'}\n        <br />\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-background--background",
+      "__id": "others-styles-background--background",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116141,16 +116063,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-border--border": {
-    "id": "others-utilities-border--border",
-    "kind": "Others/Utilities/Border",
+  "others-styles-border--border": {
+    "id": "others-styles-border--border",
+    "kind": "Others/Styles/Border",
     "name": "Border",
     "story": "Border",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'border',\n      properties: 'border: var(--border) ;',\n    },\n    {\n      className: 'border-top',\n      properties: ' border-top: var(--border) ;',\n    },\n    {\n      className: 'border-bottom',\n      properties: 'border-bottom: var(--border) ;',\n    },\n    {\n      className: 'border-right',\n      properties: 'border-right: var(--border) ;',\n    },\n    {\n      className: 'border-left',\n      properties: 'border-left: var(--border) ;',\n    },\n    {\n      className: 'border-0',\n      properties: 'border: 0 ;',\n    },\n    {\n      className: 'border-top-0',\n      properties: ' border-top: 0 ;',\n    },\n    {\n      className: 'border-bottom-0',\n      properties: 'border-bottom: 0 ;',\n    },\n    {\n      className: 'border-right-0',\n      properties: 'border-right: 0 ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Border</Heading>\n      <br />\n      &nbsp;\n      <Text weight=\"strong\">\n        Use border utilities to add or remove an element’s borders. Choose from all borders or one at a time.\n      </Text>\n      &nbsp;\n      <div\n        style={{\n          height: '250px',\n        }}\n        className=\"mt-5 mb-8\"\n      >\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            size={'standard'}\n            headerOptions={{\n              withSearch: true,\n            }}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"pl-10 h-25 bg-light w-50\">\n        <span className=\"border bg-secondary-lightest p-8 d-inline-block mr-6\">border</span>\n        <span className=\"border-top bg-secondary-lightest p-8 d-inline-block mr-6\">top</span>\n        <span className=\"border-right bg-secondary-lightest p-8 d-inline-block mr-6\">right</span>\n        <span className=\"border-bottom bg-secondary-lightest p-8 d-inline-block mr-6\">bottom</span>\n        <span className=\"border-left bg-secondary-lightest p-8 d-inline-block\">left</span>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock w-50 pl-10\">\n        {'<span className=\"border bg-secondary-lightest p-8 d-inline-block mr-6\">border</span>'}\n        <br />\n        {'<span className=\"border-top bg-secondary-lightest p-8 d-inline-block mr-6\">top</span>'}\n        <br />\n        {'<span className=\"border-right bg-secondary-lightest p-8 d-inline-block mr-6\">right</span>'}\n        <br />\n        {'<span className=\"border-bottom bg-secondary-lightest p-8 d-inline-block mr-6\">bottom</span>'}\n        <br />\n        {'<span className=\"border-left bg-secondary-lightest p-8 d-inline-block\">left</span>'}\n      </div>\n      &nbsp;\n      <div className=\"pl-10 h-25 bg-light w-50\">\n        <span className=\"border border-0 bg-secondary-lightest p-8 d-inline-block mr-6\">border-0</span>\n        <span className=\"border border-top-0 bg-secondary-lightest p-8 d-inline-block mr-6\">top-0</span>\n        <span className=\"border border-right-0 bg-secondary-lightest p-8 d-inline-block mr-6\">right-0</span>\n        <span className=\"border border-bottom-0 bg-secondary-lightest p-8 d-inline-block mr-6\">bottom-0</span>\n        <span className=\"border border-left-0 bg-secondary-lightest p-8 d-inline-block\">left-0</span>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock w-50 pl-10\">\n        {'<span className=\"border border-0 bg-secondary-lightest p-8 d-inline-block mr-6\">border-0</span>'}\n        <br />\n        {'<span className=\"border border-top-0 bg-secondary-lightest p-8 d-inline-block mr-6\">top-0</span>'}\n        <br />\n        {'<span className=\"border border-right-0 bg-secondary-lightest p-8 d-inline-block mr-6\">right-0</span>'}\n        <br />\n        {'<span className=\"border border-bottom-0 bg-secondary-lightest p-8 d-inline-block mr-6\">bottom-0</span>'}\n        <br />\n        {'<span className=\"border border-left-0 bg-secondary-lightest p-8 d-inline-block\">left-0</span>'}\n      </div>\n      &nbsp;\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-border--border",
+      "__id": "others-styles-border--border",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116158,16 +116080,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-display--display": {
-    "id": "others-utilities-display--display",
-    "kind": "Others/Utilities/Display",
+  "others-styles-display--display": {
+    "id": "others-styles-display--display",
+    "kind": "Others/Styles/Display",
     "name": "Display",
     "story": "Display",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'd-none',\n      properties: 'display: none ;',\n    },\n    {\n      className: 'd-inline',\n      properties: 'display: inline ;',\n    },\n    {\n      className: 'd-inline-block',\n      properties: 'display: inline-block ;',\n    },\n    {\n      className: 'd-block',\n      properties: 'display: block ;',\n    },\n    {\n      className: 'd-table',\n      properties: 'display: table ;',\n    },\n    {\n      className: 'd-table-row',\n      properties: 'display: table-row ;',\n    },\n    {\n      className: 'd-table-cell',\n      properties: 'display: table-cell ;',\n    },\n    {\n      className: 'd-flex',\n      properties: 'display: flex ;',\n    },\n    {\n      className: 'd-inline-flex',\n      properties: 'display: inline-flex ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Display property</Heading>\n      <br />\n      <Text weight=\"strong\">\n        Quickly and responsively toggle the display value of components and more with our display utilities.\n      </Text>\n      &nbsp;\n      <Heading size=\"m\">How it works</Heading>\n      <Paragraph>\n        Change the value of the display property with our responsive display utility classes. We purposely support only\n        a subset of all possible values for display. Classes can be combined for various effects as you need.\n      </Paragraph>\n      &nbsp;\n      <Heading size=\"m\">Notation</Heading>\n      <Paragraph> Value of display is one of:</Paragraph>\n      <div\n        style={{\n          height: '350px',\n        }}\n        className=\"mt-5 mb-8\"\n      >\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      <br />\n      <div className=\"d-inline p-2 Utilities-example\">d-inline</div>\n      <div className=\"d-inline p-2 bg-dark Utilities-example Utilities-text--color\">d-inline</div>\n      <br />\n      &nbsp;\n      <div className=\"DocPage-codeBlock pb-5 pt-5 pl-5\">\n        {'<div className=\"d-inline p-2\">d-inline</div>'}\n        <br />\n        {'<div className=\"d-inline p-2\">d-inline</div>'}\n        <br />\n      </div>\n      &nbsp;\n      <span className=\"d-block p-2 Utilities-example\">d-block</span>\n      <span className=\"d-block p-2 bg-dark Utilities-example Utilities-text--color \">d-block</span>\n      &nbsp;\n      <div className=\"DocPage-codeBlock pb-5 pt-5 pl-5\">\n        {'<span className=\"d-block p-2\">d-block</span>'}\n        <br />\n        {'<span className=\"d-block p-2\">d-block</span>'}\n        <br />\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-display--display",
+      "__id": "others-styles-display--display",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116175,16 +116097,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-flex--flex": {
-    "id": "others-utilities-flex--flex",
-    "kind": "Others/Utilities/Flex",
+  "others-styles-flex--flex": {
+    "id": "others-styles-flex--flex",
+    "kind": "Others/Styles/Flex",
     "name": "Flex",
     "story": "Flex",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'flex-fill',\n      properties: 'flex: 1 1 auto ;',\n    },\n    {\n      className: 'flex-row',\n      properties: 'flex-direction: row ;',\n    },\n    {\n      className: 'flex-column',\n      properties: 'flex-direction: column ;',\n    },\n    {\n      className: 'flex-row-reverse',\n      properties: 'flex-direction: row-reverse ;',\n    },\n    {\n      className: 'flex-column-reverse',\n      properties: 'flex-direction: column-reverse ;',\n    },\n    {\n      className: 'flex-grow-0',\n      properties: 'flex-grow: 0 ;',\n    },\n    {\n      className: 'flex-grow-1',\n      properties: 'flex-grow: 1 ;',\n    },\n    {\n      className: 'flex-shrink-0',\n      properties: 'flex-shrink: 0 ;',\n    },\n    {\n      className: 'flex-shrink-1',\n      properties: 'flex-shrink: 1 ;',\n    },\n    {\n      className: 'flex-wrap',\n      properties: 'flex-wrap: wrap ;',\n    },\n    {\n      className: 'flex-nowrap',\n      properties: 'flex-wrap: nowrap ;',\n    },\n    {\n      className: 'flex-wrap-reverse',\n      properties: 'flex-wrap: wrap-reverse ;',\n    },\n    {\n      className: 'justify-content-start',\n      properties: 'justify-content: flex-start ;',\n    },\n    {\n      className: 'justify-content-end',\n      properties: 'justify-content: flex-end ;',\n    },\n    {\n      className: 'justify-content-center',\n      properties: 'justify-content: center ;',\n    },\n    {\n      className: 'justify-content-between',\n      properties: 'justify-content: space-between ;',\n    },\n    {\n      className: 'justify-content-around',\n      properties: 'justify-content: space-around ;',\n    },\n    {\n      className: 'justify-content-evenly',\n      properties: 'justify-content: space-evenly ;',\n    },\n    {\n      className: 'align-items-start',\n      properties: 'align-items: flex-start ;',\n    },\n    {\n      className: 'align-items-end',\n      properties: 'align-items: flex-end ;',\n    },\n    {\n      className: 'align-items-center',\n      properties: 'align-items: center ;',\n    },\n    {\n      className: 'align-items-baseline',\n      properties: 'align-items: baseline ;',\n    },\n    {\n      className: 'align-items-stretch',\n      properties: 'align-items: stretch ;',\n    },\n    {\n      className: 'align-content-start',\n      properties: 'align-content: flex-start ;',\n    },\n    {\n      className: 'align-content-end',\n      properties: 'align-content: flex-end ;',\n    },\n    {\n      className: 'align-content-center',\n      properties: 'align-content: center ;',\n    },\n    {\n      className: 'align-content-between',\n      properties: 'align-content: space-between ;',\n    },\n    {\n      className: 'align-content-around',\n      properties: 'align-content: space-around ;',\n    },\n    {\n      className: 'align-content-stretch',\n      properties: 'align-content: stretch ;',\n    },\n    {\n      className: 'align-self-auto',\n      properties: 'align-self: auto ;',\n    },\n    {\n      className: 'align-self-start',\n      properties: 'align-self: flex-start ;',\n    },\n    {\n      className: 'align-self-end',\n      properties: 'align-self: flex-end ;',\n    },\n    {\n      className: 'align-self-center',\n      properties: 'align-self: center ;',\n    },\n    {\n      className: 'align-self-baseline',\n      properties: 'align-self: baseline ;',\n    },\n    {\n      className: 'align-self-stretch',\n      properties: 'align-self: stretch ;',\n    },\n    {\n      className: 'order-first',\n      properties: 'order: -1 ;',\n    },\n    {\n      className: 'order-0',\n      properties: 'order: 0 ;',\n    },\n    {\n      className: 'order-1',\n      properties: 'order: 1 ;',\n    },\n    {\n      className: 'order-2',\n      properties: 'order: 2 ;',\n    },\n    {\n      className: 'order-3',\n      properties: 'order: 3 ;',\n    },\n    {\n      className: 'order-4',\n      properties: 'order: 4 ;',\n    },\n    {\n      className: 'order-5',\n      properties: 'order: 5 ;',\n    },\n    {\n      className: 'order-last',\n      properties: 'order: 6 ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Flex</Heading>\n      <br />\n      <Text weight=\"strong\">\n        Quickly manage the layout, alignment, and sizing of grid columns, navigation, components, and more with a full\n        suite of responsive flexbox utilities.\n      </Text>\n      <div\n        style={{\n          height: '350px',\n        }}\n        className=\"mt-5 mb-8\"\n      >\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <Heading size=\"s\">\n        Use .flex-row to set a horizontal direction (the browser default), or .flex-row-reverse to start the horizontal\n        direction from the opposite side.\n      </Heading>\n      &nbsp;\n      <div className=\"d-flex flex-row Utilities-example h-25\">\n        <div className=\"p-2\">Flex item 1</div>\n        <div className=\"p-2\">Flex item 2</div>\n        <div className=\"p-2\">Flex item 3</div>\n      </div>\n      &nbsp;\n      <div className=\"d-flex flex-row-reverse Utilities-example h-25\">\n        <div className=\"p-2\">Flex item 1</div>\n        <div className=\"p-2\">Flex item 2</div>\n        <div className=\"p-2\">Flex item 3</div>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock pb-5 pt-5 pl-5\">\n        {'<div className=\"d-flex flex-row \">'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 1</div>'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 2</div>'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 3</div>'}\n        <br />\n        {'</div>'}\n        <br />\n        {'<div className=\"d-flex flex-row-reverse\">'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 1</div>'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 2</div>'}\n        <br />\n        &nbsp; {'<div className=\"p-2\">Flex item 3</div>'}\n        <br />\n        {'</div>'}\n      </div>\n      &nbsp;\n      <Heading size=\"s\">\n        Use .flex-column to set a vertical direction, or .flex-column-reverse to start the vertical direction from the\n        opposite side.\n      </Heading>\n      &nbsp;\n      <div className=\"d-flex flex-column Utilities-example\">\n        <div className=\"p-2\">Flex item 1</div>\n        <div className=\"p-2\">Flex item 2</div>\n        <div className=\"p-2\">Flex item 3</div>\n      </div>\n      &nbsp;\n      <div className=\"d-flex flex-column-reverse Utilities-example\">\n        <div className=\"p-2\">Flex item 1</div>\n        <div className=\"p-2\">Flex item 2</div>\n        <div className=\"p-2\">Flex item 3</div>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock pb-5 pt-5 pl-5\">\n        <code>\n          {'<div className=\"d-flex flex-column\">'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 1</div>'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 2</div>'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 3</div>'}\n          <br />\n          {'</div>'}\n          <br />\n        </code>\n        &nbsp;\n        <code>\n          {'<div className=\"d-flex flex-column-reverse\">'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 1</div>'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 2</div>'}\n          <br />\n          &nbsp; {'<div className=\"p-2\">Flex item 3</div>'}\n          <br />\n          {'</div>'}\n          <br />\n        </code>\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-flex--flex",
+      "__id": "others-styles-flex--flex",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116192,16 +116114,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-miscellaneous--miscellaneous": {
-    "id": "others-utilities-miscellaneous--miscellaneous",
-    "kind": "Others/Utilities/Miscellaneous",
+  "others-styles-miscellaneous--miscellaneous": {
+    "id": "others-styles-miscellaneous--miscellaneous",
+    "kind": "Others/Styles/Miscellaneous",
     "name": "Miscellaneous",
     "story": "Miscellaneous",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'hide-scroll-bar::-webkit-scrollbar',\n      properties: 'height: 0px;\\nbackground: transparent;',\n    },\n    {\n      className: 'hide-scroll-bar',\n      properties: '-ms-overflow-style: none;\\nscrollbar-width: none;',\n    },\n    {\n      className: 'ellipsis',\n      properties: 'overflow: hidden;\\ntext-overflow: ellipsis;',\n    },\n    {\n      className: 'ellipsis--noWrap',\n      properties: 'white-space: nowrap;\\noverflow: hidden;\\ntext-overflow: ellipsis;',\n    },\n    {\n      className: 'cursor-pointer',\n      properties: 'cursor: pointer;',\n    },\n  ];\n  return (\n    <div className=\"mt-8 mb-8\">\n      <Card className=\"h-100\">\n        <Table\n          data={data}\n          schema={utilitiesSchema}\n          headerOptions={{\n            withSearch: true,\n          }}\n          size={'standard'}\n          showMenu={false}\n        />\n      </Card>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-miscellaneous--miscellaneous",
+      "__id": "others-styles-miscellaneous--miscellaneous",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116209,16 +116131,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-overflow--overflow": {
-    "id": "others-utilities-overflow--overflow",
-    "kind": "Others/Utilities/Overflow",
+  "others-styles-overflow--overflow": {
+    "id": "others-styles-overflow--overflow",
+    "kind": "Others/Styles/Overflow",
     "name": "Overflow",
     "story": "Overflow",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'overflow-auto',\n      properties: 'overflow: auto !important;',\n    },\n    {\n      className: 'overflow-hidden',\n      properties: 'overflow: hidden !important;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Overflow</Heading>\n      <br />\n      <Text weight=\"strong\">\n        The CSS overflow property controls what happens to content that is too big to fit into an area.\n      </Text>\n      <div className=\"mb-8 mt-5\">\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <Heading size=\"s\">The auto value adds scrollbars when necessary:</Heading>\n      <br />\n      <div className=\"overflow-auto Utilities-overflow\">\n        You can use the overflow property when you want to have better control of the layout. The overflow property\n        specifies what happens if content overflows an element's box.\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock\">\n        {'<div className=\"overflow-auto overflow\">'}\n        <br />\n        {\n          'You can use the overflow property when you want to have better control of the layout. The overflow property specifies what happens if content overflows an element box.'\n        }\n        <br />\n        {'</div>'}\n      </div>\n      &nbsp;\n      <Heading size=\"s\">With the hidden value, the overflow is clipped, and the rest of the content is hidden</Heading>\n      <br />\n      <div className=\"overflow-hidden Utilities-overflow\">\n        You can use the overflow property when you want to have better control of the layout. The overflow property\n        specifies what happens if content overflows an element's box.\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock\">\n        {'<div className=\"overflow-hidden overflow\">'}\n        <br />\n        {\n          'You can use the overflow property when you want to have better control of the layout. The overflow property specifies what happens if content overflows an elements box.'\n        }\n        <br />\n        {'</div>'}\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-overflow--overflow",
+      "__id": "others-styles-overflow--overflow",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116226,16 +116148,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-position--position": {
-    "id": "others-utilities-position--position",
-    "kind": "Others/Utilities/Position",
+  "others-styles-position--position": {
+    "id": "others-styles-position--position",
+    "kind": "Others/Styles/Position",
     "name": "Position",
     "story": "Position",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'position-static',\n      properties: 'position: static ;',\n    },\n    {\n      className: 'position-relative',\n      properties: 'position: relative ;',\n    },\n    {\n      className: 'position-absolute',\n      properties: 'position: absolute ;',\n    },\n    {\n      className: 'position-fixed',\n      properties: 'position: fixed ;',\n    },\n    {\n      className: 'position-sticky',\n      properties: 'position: -webkit-sticky ;\\nposition: sticky ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\">Position</Heading>\n      <br />\n      <Text weight=\"strong\">Use these shorthand utilities for quickly configuring the position of an element.</Text>\n      <div className=\"mb-8 mt-5\">\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      <br />\n      <div className=\"DocPage-codeBlock w-50\">\n        <code>\n          {'<div className=\"position-static\">...</div>'}\n          <br />\n          {'<div className=\"position-relative\">...</div>'}\n          <br />\n          {'<div className=\"position-absolute\">...</div>'}\n          <br />\n          {'<div className=\"position-fixed\">...</div>'}\n          <br />\n          {'<div className=\"position-sticky\">...</div>'}\n          <br />\n        </code>\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-position--position",
+      "__id": "others-styles-position--position",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116243,16 +116165,16 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-sizing--sizing": {
-    "id": "others-utilities-sizing--sizing",
-    "kind": "Others/Utilities/Sizing",
+  "others-styles-sizing--sizing": {
+    "id": "others-styles-sizing--sizing",
+    "kind": "Others/Styles/Sizing",
     "name": "Sizing",
     "story": "Sizing",
     "parameters": {
       "storySource": {
         "source": "() => {\n  const data = [\n    {\n      className: 'w-25',\n      properties: 'width: 25% ;',\n    },\n    {\n      className: 'w-50',\n      properties: 'width: 50% ;',\n    },\n    {\n      className: 'w-75',\n      properties: 'width: 75% ;',\n    },\n    {\n      className: 'w-100',\n      properties: 'width: 100% ;',\n    },\n    {\n      className: 'w-auto',\n      properties: 'width: auto ;',\n    },\n    {\n      className: 'mw-100',\n      properties: 'max-width: 100% ;',\n    },\n    {\n      className: 'vw-100',\n      properties: 'width: 100vw ;',\n    },\n  ];\n  const Data = [\n    {\n      className: 'h-25',\n      properties: 'height: 25% ;',\n    },\n    {\n      className: 'h-50',\n      properties: 'height: 50% ;',\n    },\n    {\n      className: 'h-75',\n      properties: 'height: 75% ;',\n    },\n    {\n      className: 'h-100',\n      properties: 'height: 100% ;',\n    },\n    {\n      className: 'h-auto',\n      properties: 'height: auto ;',\n    },\n    {\n      className: 'mh-100',\n      properties: 'max-height: 100% ;',\n    },\n    {\n      className: 'vh-100',\n      properties: 'height: 100vh ;',\n    },\n    {\n      className: 'min-vh-100',\n      properties: 'min-height: 100vh ;',\n    },\n  ];\n  return (\n    <div>\n      <Heading size=\"xxl\"> Sizing</Heading>\n      <br />\n      <Text weight=\"strong\">\n        You can make an element as wide or as tall (relative to its parent) with our width and height utilities.\n      </Text>\n      <br />\n      &nbsp;\n      <Heading size=\"s\">WIDTH</Heading>\n      <div className=\"mt-4 mb-8\">\n        <Card className=\"h-100\">\n          <Table\n            data={data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"w-25 p-3 mb-2 width-color\">Width 25%</div>\n      <div className=\"w-50 p-3 mb-2 width-color\">Width 50%</div>\n      <div className=\"w-75 p-3 mb-2 width-color\">Width 75%</div>\n      <div className=\"w-100 p-3 mb-2 width-color\">Width 100%</div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock\">\n        {'<div className=\"w-25 p-3\">Width 25%</div>'}\n        <br />\n        {'<div className=\"w-50 p-3\">Width 50%</div>'}\n        <br />\n        {'<div className=\"w-75 p-3\">Width 75%</div>'}\n        <br />\n        {'<div className=\"w-100 p-3\">Width 100%</div>'}\n        <br />\n      </div>\n      &nbsp;\n      <Heading size=\"m\">HEIGHT</Heading>\n      <div className=\"mt-4 mb-8\">\n        <Card className=\"h-100\">\n          <Table\n            data={Data}\n            schema={utilitiesSchema}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size={'standard'}\n            showMenu={false}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"height w-50\">\n        <div className=\"h-25 d-inline-block height-color mr-2\">Height 25%</div>\n        <div className=\"h-50 d-inline-block height-color mr-2\">Height 50%</div>\n        <div className=\"h-75 d-inline-block height-color mr-2\">Height 75%</div>\n        <div className=\"h-100 d-inline-block height-color mr-2\">Height 100%</div>\n      </div>\n      &nbsp;\n      <div className=\"DocPage-codeBlock\">\n        <code>\n          {'<div className=\"h-25 d-inline-block\">Height 25%</div>'}\n          <br />\n          {'<div className=\"h-50 d-inline-block\">Height 50%</div>'}\n          <br />\n          {'<div className=\"h-75 d-inline-block\">Height 75%</div>'}\n          <br />\n          {'<div className=\"h-100 d-inline-block\">Height 100%</div>'}\n          <br />\n        </code>\n      </div>\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-sizing--sizing",
+      "__id": "others-styles-sizing--sizing",
       "args": {},
       "argTypes": {},
       "__isArgsStory": false
@@ -116260,18 +116182,96 @@
     "args": {},
     "initialArgs": {}
   },
-  "others-utilities-spacing--spacing": {
-    "id": "others-utilities-spacing--spacing",
-    "kind": "Others/Utilities/Spacing",
+  "others-styles-spacing--spacing": {
+    "id": "others-styles-spacing--spacing",
+    "kind": "Others/Styles/Spacing",
     "name": "Spacing",
     "story": "Spacing",
     "parameters": {
       "storySource": {
         "source": "() => {\n  return (\n    <div>\n      <Heading size=\"xxl\">Spacing</Heading>\n      <br />\n      <br />\n      <Text weight=\"strong\">\n        The classes are named using the format (property)(sides)-(size) for xs and (property)(sides)-(breakpoint)-(size)\n        for sm, md, lg, and xl.\n      </Text>\n      <br />\n      <Paragraph>\n        <br />\n        <Text weight=\"strong\">Where property is one of:</Text>\n        <br />\n        m - for classes that set margin\n        <br />\n        p - for classes that set padding\n        <br />\n        <br />\n        <Text weight=\"strong\">Where sides is one of:</Text>\n        <br />\n        t - for classes that set margin-top or padding-top\n        <br />\n        b - for classes that set margin-bottom or padding-bottom\n        <br />\n        l - for classes that set margin-left or padding-left\n        <br />\n        r - for classes that set margin-right or padding-right\n        <br />\n        x - for classes that set both *-left and *-right\n        <br />\n        y - for classes that set both *-top and *-bottom\n        <br />\n        blank - for classes that set a margin or padding on all 4 sides of the element\n        <br />\n        <br />\n        <Text weight=\"strong\">Where size is one of:</Text>\n      </Paragraph>\n      <br />\n      <div className=\"mt-5 mb-8 bg-secondary-lightest p-3 Card w-50\">\n        <Row>\n          <Column className=\"p-2\">\n            <Text weight=\"strong\">Size</Text>\n          </Column>\n          <Column className=\"p-2\">\n            <Text weight=\"strong\">Token</Text>\n          </Column>\n          <Column className=\"p-2\">\n            <Text weight=\"strong\">Pixels</Text>\n          </Column>\n        </Row>\n        {sizeData.map(({ value, properties, pixel }, index) => {\n          return (\n            <Row key={index}>\n              <Column className=\"p-2\">{value}</Column>\n              <Column className=\"p-2\">{properties}</Column>\n              <Column className=\"p-2\">{pixel}</Column>\n            </Row>\n          );\n        })}\n      </div>\n      <Heading size=\"m\">Class List</Heading>\n      <div className=\"mt-5 mb-8\">\n        <Card className=\"h-100 overflow-hidden\">\n          <Table\n            data={classData}\n            schema={classSchema}\n            separator={true}\n            withHeader={true}\n            headerOptions={{\n              withSearch: true,\n            }}\n            size=\"tight\"\n            showMenu={false}\n            pageSize={16}\n            onSearch={(currData, searchTerm) => {\n              return currData.filter((d) => d.pixel.toLowerCase().includes(searchTerm.toLowerCase()));\n            }}\n          />\n        </Card>\n      </div>\n      <Heading size=\"m\">Examples</Heading>\n      <Paragraph>Here are some representative examples of these classes:</Paragraph>\n      &nbsp;\n      <div className=\"w-50 bg-secondary p-10 m-10\">\n        This text is the content of the box. We have added a (p-10) padding, (m-10) margin to it.\n      </div>\n      <div className=\"DocPage-codeBlock pt-5 pb-5 pl-5\">\n        {'<div className=\"w-50 bg-secondary p-10 m-10 \">'}\n        <br />\n        {'This text is the content of the box.'}\n        {'We have added a (p-10) padding, (m-10) margin to it.'}\n        <br />\n        {'</div>'}\n      </div>\n      &nbsp;\n    </div>\n  );\n}"
       },
-      "__id": "others-utilities-spacing--spacing",
+      "__id": "others-styles-spacing--spacing",
       "args": {},
       "argTypes": {},
+      "__isArgsStory": false
+    },
+    "args": {},
+    "initialArgs": {}
+  },
+  "others-utilities-outsideclick-all--all": {
+    "id": "others-utilities-outsideclick-all--all",
+    "kind": "Others/Utilities/OutsideClick/All",
+    "name": "All",
+    "story": "All",
+    "parameters": {
+      "storySource": {
+        "source": "() => {\n  return (\n    <OutsideClick className=\"d-inline-block\" onOutsideClick={action('outside click')}>\n      <Card\n        className=\"d-flex align-items-center justify-content-center\"\n        style={{ height: 200, width: 200 }}\n        onClick={action('inside click')}\n      >\n        <Heading>Card</Heading>\n      </Card>\n    </OutsideClick>\n  );\n}"
+      },
+      "__id": "others-utilities-outsideclick-all--all",
+      "args": {},
+      "argTypes": {
+        "onOutsideClick": {
+          "name": "onOutsideClick",
+          "description": "Trigger the function on outside click",
+          "type": {
+            "required": true,
+            "name": "function",
+            "value": "(event: Event) => void"
+          },
+          "table": {
+            "type": {
+              "summary": "(event: Event) => void"
+            },
+            "defaultValue": null
+          }
+        },
+        "children": {
+          "name": "children",
+          "description": "Element to be rendered",
+          "type": {
+            "required": true,
+            "name": "other",
+            "value": "ReactElement<any, string | ((props: any) => ReactElement<any, any> | null) | (new (props: any) => Component<any, any, any>)>"
+          },
+          "table": {
+            "type": {
+              "summary": "ReactElement<any, string | ((props: any) => ReactElement<any, any> | null) | (new (props: any) => Component<any, any, any>)>"
+            },
+            "defaultValue": null
+          }
+        },
+        "className": {
+          "name": "className",
+          "description": "Adds custom class",
+          "type": {
+            "required": false,
+            "name": "other",
+            "value": "string | undefined"
+          },
+          "table": {
+            "type": {
+              "summary": "string | undefined"
+            },
+            "defaultValue": null
+          }
+        },
+        "data-test": {
+          "name": "data-test",
+          "description": "Stores custom testing data private to the component.",
+          "type": {
+            "required": false,
+            "name": "other",
+            "value": "string | undefined"
+          },
+          "table": {
+            "type": {
+              "summary": "string | undefined"
+            },
+            "defaultValue": null
+          }
+        }
+      },
       "__isArgsStory": false
     },
     "args": {},
