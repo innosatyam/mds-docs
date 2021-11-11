@@ -4,3 +4,7 @@ menus:
     link: /components/overview/tabs/all-components/
   - label: Buttons
     link: /components/button/usage/
+  - label: Badges
+    link: /components/badges/usage/
+  - label: Card
+    link: /components/card/usage/
