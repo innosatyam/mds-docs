@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "extract": "node ../tools/extract.js",
-    "develop": "yarn run extract && gatsby develop",
+    "develop": "gatsby develop",
     "build": "yarn run extract && gatsby build"
   },
   "dependencies": {

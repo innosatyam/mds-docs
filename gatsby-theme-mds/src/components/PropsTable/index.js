@@ -17,6 +17,7 @@ import {
   Button,
   Heading,
   Icon,
+  Toast
 } from '@innovaccer/design-system';
 import {
   LiveProvider,
@@ -63,7 +64,7 @@ const StoryComp = ({
   const [htmlCode, setHtmlCode] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeButton, setActiveButton] = useState('React');
-
+  const [showToast, setShowToast] = useState(false);
   const [jsxCode, setJsxCode] = React.useState(getRawPreviewCode(componentData));
 
   const TabsWrap = withLive(({ live }) => {
@@ -94,20 +95,30 @@ const StoryComp = ({
     </div>
   );
 
-  const copyCode = (val) => { navigator.clipboard.writeText(val); }
+  const copyToClipboard = (reactCode, htmlCode) => {
+    if (activeButton === 'React') {
+      navigator.clipboard.writeText(reactCode);
+    } else {
+      navigator.clipboard.writeText(htmlCode);
+    }
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 1000);
+  }
 
   const CopyCode = (props) => {
     const { onClick } = props;
     return (
       <div className='ml-auto d-flex'>
-        <img
-          src={logo}
-          className='codesandBox-icon mr-6 align-self-center'
-          onClick={(e) => {
-            e.preventDefault();
-            openSandbox(jsxCode);
-          }}
-        />
+        {activeButton === 'React' &&
+          <img
+            src={logo}
+            className='codesandBox-icon mr-6 align-self-center'
+            onClick={(e) => {
+              e.preventDefault();
+              openSandbox(jsxCode);
+            }}
+          />
+        }
         <Icon
           name='content_copy'
           size={20}
@@ -146,7 +157,7 @@ const StoryComp = ({
       <div className='pt-8 pb-8 d-flex w-100 m-auto flex-column align-items-center'>
         <LiveProvider code={jsxCode} scope={imports}>
           <Card
-            shadow='light'
+            shadow='none'
             className='w-100 overflow-hidden'
           >
             <CardHeader>
@@ -215,17 +226,11 @@ const StoryComp = ({
                   >
                     HTML
                   </Button>
-                  {activeButton === 'React' && (
-                    <CopyCode
-                      onClick={() => {
-                        const editor =
-                          document.querySelector(
-                            '.npm__react-simple-code-editor__textarea'
-                          );
-                        if (editor) copyCode(editor.value);
-                      }}
-                    />
-                  )}
+                  <CopyCode
+                    onClick={() => {
+                      copyToClipboard(jsxCode, htmlCode);
+                    }}
+                  />
                 </div>
               </div>
 
@@ -241,6 +246,15 @@ const StoryComp = ({
             <ArgsTable rows={propData} />
           </>
         )}
+        {
+          showToast &&
+          <Toast
+            appearance="default"
+            title="Copied to clipboard"
+            className="position-fixed ml-5 copy-clipboard-toast"
+            onClose={() => setShowToast(false)}
+          />
+        }
       </div>
     </>
   );

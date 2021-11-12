@@ -39,3 +39,8 @@
 .transformation-button .Button-icon i {
   color: var(--inverse-lighter) !important;
 }
+
+.copy-clipboard-toast {
+  bottom: 0;
+  left: 0;
+}
