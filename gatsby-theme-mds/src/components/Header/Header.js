@@ -1,26 +1,18 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import { Heading } from '@innovaccer/design-system';
 import { useHeaderItems } from '../../util/HeaderItems';
-import logo from '../../../../site/src/images/default.png';
+import logo from '../../../../site/src/images/headerLogo.png';
 import './Header.css';
 
 const Header = ({ relativePagePath }) => {
   const items = useHeaderItems();
   return (
     <div
-      className='header bg-light'
+      className='header bg-light d-flex w-100 position-sticky py-2 px-5'
     >
-      <Link to='/' className='HeaderLink ml-0'>
-        <img src={logo} />
+      <Link to='/' className='HeaderLink ml-0 pt-5'>
+        <img src={logo} height="28px" />
       </Link>
-      <Heading
-        size='xs'
-        className='ml-8'
-        appearance='subtle'
-      >
-        Masala Design System
-      </Heading>
       <div >
         {items.map(({ link, label }, index) => {
           const isExternal =
