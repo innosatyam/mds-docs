@@ -91,12 +91,12 @@ const Layout = ({
   const [isToastActive, setIsToastActive] = useState(false);
   const [toastTitle, setToastTitle] = useState('');
 
-
   function getJsxCode(name) {
     const componentData = getStorybookData(name);
 
     const jsxCode = componentData
-      ? componentData.parameters.storySource.source
+      ? componentData.customCode ||
+      componentData.parameters.storySource.source
       : '';
     return jsxCode;
   }
@@ -141,6 +141,7 @@ const Layout = ({
   const toggleToast = (name) => {
     setIsToastActive(true);
     setToastTitle(name);
+    setTimeout(() => setIsToastActive(false), 1500);
   }
 
   const Logos = ({ children, logoData, ...rest }) => {
@@ -253,7 +254,7 @@ const Layout = ({
             <Toast
               appearance='success'
               title={toastTitle}
-              className='toast'
+              className='position-fixed ml-5 toast'
               onClose={() => setIsToastActive(false)}
             />
           )}
