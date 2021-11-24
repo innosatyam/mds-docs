@@ -34,7 +34,7 @@ export const TableWrapper = styled.table<{
     // Margin collapse
     marginTop: inAddonPanel ? 0 : 25,
     marginBottom: inAddonPanel ? 0 : 40,
-    boxShadow: `rgba(0, 0, 0, 0.10) 0 2px 5px 1px`,
+    // boxShadow: `rgba(0, 0, 0, 0.10) 0 2px 5px 1px`,
 
     'thead th:first-of-type, td:first-of-type': {
       // intentionally specify thead here

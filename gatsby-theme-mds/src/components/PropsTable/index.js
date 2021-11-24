@@ -200,7 +200,7 @@ const StoryComp = ({
           <TabsWrap />
           {isExpanded && (
             <Card
-              shadow='light'
+              shadow='none'
               className='w-100 overflow-hidden mt-6 live-editor-card'
             >
               <div>
@@ -249,9 +249,9 @@ const StoryComp = ({
         {
           showToast &&
           <Toast
-            appearance="default"
+            appearance="success"
             title="Copied to clipboard"
-            className="position-fixed ml-5 copy-clipboard-toast"
+            className="position-fixed ml-5 toast"
             onClose={() => setShowToast(false)}
           />
         }
