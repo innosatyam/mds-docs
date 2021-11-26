@@ -13,7 +13,7 @@ export const theme = {
   // Typography
   typography: {
     fonts: {
-      mono: 'monospace',
+      mono: 'Roboto mono',
     },
   },
   background: {
@@ -30,7 +30,7 @@ export const theme = {
     base: '',
   },
   fontBase: '"Nunito Sans", "Open Sans", sans-serif',
-  fontCode: 'monospace',
+  fontCode: 'Roboto mono',
 
   // Text colors
   textColor: 'black',

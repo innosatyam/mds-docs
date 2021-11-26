@@ -112,41 +112,29 @@ const Layout = ({
     return jsxCode;
   }
 
-  const Preview = ({ children, name, ...rest }) => {
+  const Preview = ({ name }) => {
     return (
-      <>
-        <div {...rest}>{children}</div>
+      <div>
         <PropsTable
           componentData={getJsxCode(name)}
         />
-      </>
+      </div>
     );
   };
 
-  const A11yBlock = ({
-    children,
-    name,
-    ...rest
-  }) => {
+  const A11yBlock = ({ name }) => {
     const componentData = getStorybookData(name);
     const a11yProps = componentData && componentData.a11yProps;
     return (
       <div className="mb-8">
-        <div {...rest}>{children}</div>
-        <br/>
         <Markdown className="A11y-markdown">{a11yProps}</Markdown>
       </div>
     )
   }
 
-  const PreviewWithPropTable = ({
-    children,
-    name,
-    ...rest
-  }) => {
+  const PreviewWithPropTable = ({ name }) => {
     return (
       <div>
-        <div {...rest}>{children}</div>
         <ArgsTable rows={getPropTableData(name)} />
       </div>
     );
@@ -255,7 +243,7 @@ const Layout = ({
 
             <Column
               size={3}
-              className="pb-6 in-page-nav"
+              className="pb-6 in-page-nav position-sticky"
             >
               <TableOfContent
                 is404Page={is404}

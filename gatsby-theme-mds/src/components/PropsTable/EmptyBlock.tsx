@@ -1,6 +1,5 @@
 import React from 'react';
 import { styled } from '@storybook/theming';
-import { transparentize } from 'polished';
 import { withReset } from './Shared';
 
 const Wrapper = styled.div<{}>(withReset, ({ theme }) => ({
