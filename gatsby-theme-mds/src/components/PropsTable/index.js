@@ -56,8 +56,6 @@ ${customCode}
 
 const StoryComp = ({
   componentData,
-  showArgsTable = true,
-  propData = {},
 }) => {
   const testRef = useRef(null);
   const [zoom, setZoom] = useState(1);
@@ -238,14 +236,6 @@ const StoryComp = ({
             </Card>
           )}
         </LiveProvider>
-        {showArgsTable && (
-          <>
-            <Heading className='mt-10 align-self-start'>
-              Props
-            </Heading>
-            <ArgsTable rows={propData} />
-          </>
-        )}
         {
           showToast &&
           <Toast

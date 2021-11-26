@@ -58,3 +58,15 @@
   display: inline-block;
   padding: 0 var(--spacing-m) 0 var(--spacing-m);
 }
+
+.A11y-markdown code{
+  background-color: var(--secondary-lightest);
+  border: 1px solid var(--secondary-light);
+  font-weight: var(--font-weight-bold);
+  color: var(--inverse);
+  line-height: 1;
+  padding: 3px 5px;
+  white-space: nowrap;
+  border-radius: var(--spacing-m);
+  font-size: var(--spacing-l);
+}

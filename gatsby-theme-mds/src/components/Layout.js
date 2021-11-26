@@ -27,6 +27,8 @@ import Footer from './Footer/Footer';
 import ProductLogos from '../components/Logos/Logos';
 import ProductColors from '../components/Colors/Colors';
 import { getStorybookData } from '../util/StorybookData';
+import { ArgsTable } from '../components/PropsTable/Table';
+import Markdown from 'markdown-to-jsx';
 
 const copyToClipboard = (str) => {
   let codeBlock = '';
@@ -116,11 +118,26 @@ const Layout = ({
         <div {...rest}>{children}</div>
         <PropsTable
           componentData={getJsxCode(name)}
-          showArgsTable={false}
         />
       </>
     );
   };
+
+  const A11yBlock = ({
+    children,
+    name,
+    ...rest
+  }) => {
+    const componentData = getStorybookData(name);
+    const a11yProps = componentData && componentData.a11yProps;
+    return (
+      <div className="mb-8">
+        <div {...rest}>{children}</div>
+        <br/>
+        <Markdown className="A11y-markdown">{a11yProps}</Markdown>
+      </div>
+    )
+  }
 
   const PreviewWithPropTable = ({
     children,
@@ -128,13 +145,10 @@ const Layout = ({
     ...rest
   }) => {
     return (
-      <>
+      <div>
         <div {...rest}>{children}</div>
-        <PropsTable
-          componentData={getJsxCode(name)}
-          propData={getPropTableData(name)}
-        />
-      </>
+        <ArgsTable rows={getPropTableData(name)} />
+      </div>
     );
   };
 
@@ -173,6 +187,7 @@ const Layout = ({
     pre: Code,
     Preview: Preview,
     PreviewWithPropTable: PreviewWithPropTable,
+    A11yBlock: A11yBlock,
     Rules,
     DOs,
     DONTs,
