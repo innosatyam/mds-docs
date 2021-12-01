@@ -28,9 +28,9 @@ const ComponentsContainer = ({
   const activeTab =
     tabs && tabs.length
       ? tabs.findIndex(
-          (tab, index) =>
-            getTabSlug(index) === pageName.toLowerCase()
-        )
+        (tab, index) =>
+          getTabSlug(index) === pageName.toLowerCase()
+      )
       : '';
 
   const [activeIndex, setActiveIndex] = React.useState(
@@ -51,15 +51,16 @@ const ComponentsContainer = ({
       <Heading>{pageTitle}</Heading>
       <p>{pageDescription}</p>
       {tabs && tabs.length && (
-        <Tabs
-          activeIndex={activeIndex}
-          onTabChange={onTabChangeHandler}
-          className='mb-6 mt-4'
-        >
-          {tabs.map((tab) => (
-            <Tab label={tab}></Tab>
-          ))}
-        </Tabs>
+        <div className='mb-7 mt-4'>
+          <Tabs
+            activeIndex={activeIndex}
+            onTabChange={onTabChangeHandler}
+          >
+            {tabs.map((tab) => (
+              <Tab label={tab}></Tab>
+            ))}
+          </Tabs>
+        </div>
       )}
       {children}
     </>

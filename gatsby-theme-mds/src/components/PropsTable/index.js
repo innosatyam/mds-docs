@@ -15,7 +15,6 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Heading,
   Icon,
   Toast
 } from '@innovaccer/design-system';
@@ -26,7 +25,7 @@ import {
   LivePreview,
   withLive
 } from 'react-live';
-import { ArgsTable } from './Table.tsx';
+import './prism.css';
 
 const beautifyHTMLOptions = {
   indent_size: 2,
@@ -110,7 +109,7 @@ const StoryComp = ({
         {activeButton === 'React' &&
           <img
             src={logo}
-            className='codesandBox-icon mr-6 align-self-center'
+            className='codesandBox-icon cursor-pointer mr-6 align-self-center'
             onClick={(e) => {
               e.preventDefault();
               openSandbox(jsxCode);
@@ -139,7 +138,7 @@ const StoryComp = ({
   const showLiveEditorContent = () => {
     if (activeButton === 'React') {
       return (
-        <div>
+        <div className="px-4">
           <LiveEditor theme={vsDark} />
         </div>
       );
@@ -152,7 +151,7 @@ const StoryComp = ({
 
   return (
     <>
-      <div className='pt-8 pb-8 d-flex w-100 m-auto flex-column align-items-center'>
+      <div className='pb-8 pt-4 d-flex w-100 m-auto flex-column align-items-center'>
         <LiveProvider code={jsxCode} scope={imports}>
           <Card
             shadow='none'
@@ -161,33 +160,32 @@ const StoryComp = ({
             <CardHeader>
               <div className='d-flex justify-content-end'>
                 <Button
+                  appearance="transparent"
+                  aria-label="Zoom In"
                   onClick={() => handleZoomIn()}
                   icon='zoom_in'
-                  appearance='transparent'
                   largeIcon
-                  className='transformation-button'
-                ></Button>
+                />
                 <Button
                   onClick={() => handleZoomOut()}
                   icon='zoom_out'
                   appearance='transparent'
+                  aria-label="Zoom Out"
                   largeIcon
-                  className='transformation-button'
                 ></Button>
               </div>
             </CardHeader>
             <CardBody className='d-flex flex-column align-items-center'>
               <div ref={testRef}>
                 <LivePreview
-                  className='p-8 live-preview'
+                  className='p-8 mw-100 mh-100 d-block'
                   style={{ zoom: zoom }}
                 />
                 <LiveError />
               </div>
-              <div className='d-flex flex-row-reverse w-100 mb-6'>
+              <div className='d-flex justify-content-end w-100 mb-6'>
                 <Button
                   appearance='basic'
-                  className='action-button'
                   onClick={() => setIsExpanded(!isExpanded)}
                 >
                   {isExpanded ? 'Hide code' : 'Show code'}
@@ -199,37 +197,35 @@ const StoryComp = ({
           {isExpanded && (
             <Card
               shadow='none'
-              className='w-100 overflow-hidden mt-6 live-editor-card'
+              className='w-100 overflow-hidden mt-4 live-editor-card'
             >
-              <div>
-                <div className='d-flex px-4 pt-6'>
-                  <Button
-                    appearance='basic'
-                    onClick={() => setActiveButton('React')}
-                    selected={
-                      activeButton === 'React'
-                        ? true
-                        : false
-                    }
-                    className='mr-3'
-                  >
-                    React
-                  </Button>
-                  <Button
-                    appearance='basic'
-                    onClick={() => setActiveButton('HTML')}
-                    selected={
-                      activeButton === 'HTML' ? true : false
-                    }
-                  >
-                    HTML
-                  </Button>
-                  <CopyCode
-                    onClick={() => {
-                      copyToClipboard(jsxCode, htmlCode);
-                    }}
-                  />
-                </div>
+              <div className='d-flex px-5 pt-5 pb-4'>
+                <Button
+                  appearance='basic'
+                  onClick={() => setActiveButton('React')}
+                  selected={
+                    activeButton === 'React'
+                      ? true
+                      : false
+                  }
+                  className='mr-3'
+                >
+                  React
+                </Button>
+                <Button
+                  appearance='basic'
+                  onClick={() => setActiveButton('HTML')}
+                  selected={
+                    activeButton === 'HTML' ? true : false
+                  }
+                >
+                  HTML
+                </Button>
+                <CopyCode
+                  onClick={() => {
+                    copyToClipboard(jsxCode, htmlCode);
+                  }}
+                />
               </div>
 
               {showLiveEditorContent()}
