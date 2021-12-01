@@ -16,6 +16,7 @@ const read = async (url) => {
         Object.keys(stories).map((item) => {
             const customData = kindParameters[stories[item].kind].docs;
             stories[item].customCode = customData && customData.docPage && customData.docPage.customCode;
+            stories[item].a11yProps = customData && customData.docPage && customData.docPage.a11yProps;
         });
         // eslint-disable-next-line no-undef
         return JSON.stringify(stories, null, 2);
