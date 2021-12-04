@@ -176,7 +176,7 @@ const StoryComp = ({
               </div>
             </CardHeader>
             <CardBody className='d-flex flex-column align-items-center'>
-              <div ref={testRef}>
+              <div className='w-100' ref={testRef}>
                 <LivePreview
                   className='p-8 mw-100 mh-100 d-block'
                   style={{ zoom: zoom }}
