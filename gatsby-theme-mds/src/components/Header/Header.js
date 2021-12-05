@@ -8,6 +8,7 @@ const Header = ({ relativePagePath }) => {
   const items = useHeaderItems();
   return (
     <div
+      id="mainHeader"
       className='header bg-light d-flex w-100 position-sticky py-2 px-5'
     >
       <Link to='/' className='HeaderLink ml-0 pt-5'>
@@ -21,19 +22,17 @@ const Header = ({ relativePagePath }) => {
           return (
             <Link
               to={link}
-              className={`HeaderLink ${
-                relativePagePath.includes(
-                  label.toLowerCase()
-                )
+              className={`HeaderLink ${relativePagePath.includes(
+                label.toLowerCase()
+              )
                   ? 'HeaderLink--active'
                   : ''
-              } ${
-                relativePagePath.includes(
+                } ${relativePagePath.includes(
                   label.toLowerCase()
                 )
                   ? 'HeaderLink--active'
                   : 'HeaderLink--default'
-              }`}
+                }`}
               target={isExternal && '_blank'}
             >
               {label}
