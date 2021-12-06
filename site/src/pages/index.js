@@ -231,7 +231,7 @@ const Home = () => {
             </Row>
           </section>
 
-          <Footer relativePagePath={'/404'} />
+          <Footer relativePagePath={'/home'} />
         </Column>
       </Row>
     </Homepage>

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from '@innovaccer/design-system';
+import { Link, Text } from '@innovaccer/design-system';
 import { useFooterItems } from '../../util/FooterItems';
 import './Footer.css';
 
 const Footer = ({ relativePagePath }) => {
   const items = useFooterItems();
   return (
-    <div className='d-flex w-100 px-12 py-8 bg-secondary-lightest position-sticky align-items-center'>
+    <div
+      className={`d-flex w-100 px-12 py-7 bg-secondary-lightest position-sticky align-items-center ${relativePagePath === '/home' ? 'justify-content-center' : ''}`}>
       <div>
         {items.map(({ link, label }, index) => {
           let isExternal;
@@ -17,19 +18,16 @@ const Footer = ({ relativePagePath }) => {
           }
           return (
             <Link
-              appearance={
-                relativePagePath.includes(
-                  label.toLowerCase()
-                )
-                  ? 'default'
-                  : 'subtle'
-              }
               href={link}
-              className={`link ${index > 0 ? 'ml-6' : ''} `}
+              className={`link ${index > 0 ? 'mr-7' : 'mr-8'} `}
               target={isExternal && '_blank'}
               disabled={index === 0}
             >
-              {label}
+              <Text
+                appearance={index === 0 ? 'subtle' : 'default'}
+              >
+                {label}
+              </Text>
             </Link>
           );
         })}
