@@ -10,14 +10,7 @@ const read = async (url) => {
     await page.goto(url);
     await page.waitForFunction('window.__STORYBOOK_STORY_STORE__ && window.__STORYBOOK_STORY_STORE__.extract && window.__STORYBOOK_STORY_STORE__.extract()');
     const data = JSON.parse(await page.evaluate(async () => {
-        const storybookData = window.__STORYBOOK_STORY_STORE__.getDataForManager();
-        const stories = storybookData['stories'];
-        const kindParameters = storybookData['kindParameters'];
-        Object.keys(stories).map((item) => {
-            const customData = kindParameters[stories[item].kind].docs;
-            stories[item].customCode = customData && customData.docPage && customData.docPage.customCode;
-            stories[item].a11yProps = customData && customData.docPage && customData.docPage.a11yProps;
-        });
+        const stories = __STORYBOOK_STORY_STORE__.extract();
         // eslint-disable-next-line no-undef
         return JSON.stringify(stories, null, 2);
     }));

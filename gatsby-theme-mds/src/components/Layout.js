@@ -96,8 +96,8 @@ const Layout = ({
   function getJsxCode(name) {
     const componentData = getStorybookData(name);
 
-    const jsxCode = componentData
-      ? componentData.customCode ||
+    const jsxCode = componentData && componentData.parameters
+      ? componentData.parameters.docs.docPage?.customCode ||
       componentData.parameters.storySource.source
       : '';
     return jsxCode;
@@ -124,7 +124,7 @@ const Layout = ({
 
   const A11yBlock = ({ name }) => {
     const componentData = getStorybookData(name);
-    const a11yProps = componentData && componentData.a11yProps;
+    const a11yProps = componentData && componentData.parameters.docs.docPage?.a11yProps;
     return (
       <div className="mb-8">
         <Markdown className="A11y-markdown">{a11yProps}</Markdown>
