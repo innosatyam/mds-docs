@@ -21,7 +21,7 @@ function Overview() {
           alt="Avatars"
         />
       },
-      link: '',
+      link: 'avatar/usage',
       label: 'Avatars'
     },
     {

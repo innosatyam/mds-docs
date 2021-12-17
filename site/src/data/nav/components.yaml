@@ -2,6 +2,8 @@ base: components
 menus:
   - label: Overview
     link: /components/overview/tabs/all-components/
+  - label: Avatar
+    link: /components/avatar/usage/
   - label: Badges
     link: /components/badges/usage/
   - label: Breadcrumbs
