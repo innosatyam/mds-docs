@@ -127,9 +127,9 @@ const Layout = ({
     const a11yProps = componentData && componentData.parameters.docs.docPage?.a11yProps;
     return (
       <div className="mb-8">
-        <Markdown className="A11y-markdown">{a11yProps}</Markdown>
+        {a11yProps && <Markdown className="A11y-markdown">{a11yProps}</Markdown>}
       </div>
-    )
+    );
   }
 
   const PreviewWithPropTable = ({ name }) => {
