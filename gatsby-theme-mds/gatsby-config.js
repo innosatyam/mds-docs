@@ -150,7 +150,9 @@ module.exports = (themeOptions) => {
           gatsbyRemarkPlugins: [
             ...defaultRemarkPlugins,
             ...gatsbyRemarkPlugins,
+            `gatsby-remark-images`
           ],
+          plugins: [ `gatsby-remark-images` ],
           defaultLayouts: {
             default: require.resolve('./src/templates/Default.js'),
             home: require.resolve('./src/templates/Homepage.js'),
