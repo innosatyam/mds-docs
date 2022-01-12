@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StaticImage } from "gatsby-plugin-image";
-import { Text } from '@innovaccer/design-system';
+import { Link } from 'gatsby';
 
 const imgStyle = {
   height: 'auto'
@@ -235,7 +235,12 @@ export const schema = [
     width: "40%",
     sorting: false,
     cellRenderer: ({ data }) => {
-      return <Text appearance="link">{data.name}</Text>;
+      return <Link 
+      className='Text--link card-link'
+      to={`/components/${data.link.toLowerCase()}`}
+      >
+        {data.name}
+      </Link>;
     },
   },
   {

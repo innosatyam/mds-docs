@@ -21,8 +21,8 @@
   height: var(--spacing-6);
 }
 
-.card-link {
-  text-decoration: none;
+.card-link, .card-link:hover {
+  text-decoration: none !important;
 }
 
 .card-link[disabled], .card-link[disabled] * {
