@@ -10,9 +10,9 @@ const Header = ({ relativePagePath }) => {
   return (
     <div
       id="mainHeader"
-      className='header bg-light d-flex w-100 position-sticky py-2 px-5'
+      className='header bg-light d-flex w-100 position-sticky px-5'
     >
-      <Link to='/' className='HeaderLink ml-0 pt-5'>
+      <Link to='/' className='HeaderLink ml-0'>
         <img src={logo} width="290px" height="28px" />
       </Link>
       <div >

@@ -3,6 +3,8 @@
   top: 0;
   align-items: center;
   border-bottom: var(--border);
+  padding-top: var(--spacing-s);
+  padding-bottom: 1px;
 }
 
 .HeaderLink:hover {
@@ -18,6 +20,7 @@
   font-weight: var(--font-weight-normal);
   padding: var(--spacing) 0;
   margin-left: var(--spacing-3);
+  line-height: 0;
 }
 
 .HeaderLink--active {
