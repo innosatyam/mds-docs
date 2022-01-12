@@ -18,6 +18,7 @@ const Footer = ({ relativePagePath }) => {
           }
           return (
             <Link
+              key={index}
               href={link}
               className={`link ${index > 0 ? 'mr-7' : 'mr-8'} `}
               target={isExternal && '_blank'}

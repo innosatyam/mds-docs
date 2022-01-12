@@ -5,109 +5,22 @@ tabs: ["All components", "Status"]
 showMobile: true
 ---
 
+import { navigate } from 'gatsby';
+import { data, schema } from "../../../../data/components/index.js";
+
 <Card shadow="none">
   <Table
     showMenu={false}
     type="resource"
-    withHeader={false}
-    onRowClick={(props) => {
-      window.open(`/components/${(props.name).toLowerCase()}/usage/`, "_blank");
+    withHeader={true}
+    headerOptions={{
+      withSearch: true,
     }}
-    data={[
-      {
-        name: "Avatar",
-        design: "Unavailable",
-        code: "Unavailable",
-      },
-      {
-        name: "Badges",
-        design: "Available",
-        code: "Available",
-      },
-      {
-        name: "Breadcrumbs",
-        design: "Available",
-        code: "Available",
-      },
-      {
-        name: "Button",
-        design: "Available",
-        code: "Available",
-      },
-      {
-        name: "Card",
-        design: "Available",
-        code: "Available",
-      },
-      {
-        name: "Checkbox",
-        design: "Available",
-        code: "Available",
-      },
-      {
-        name: "Chips",
-        design: "Unavailable",
-        code: "Unavailable",
-      },
-      {
-        name: "Date and Time picker",
-        design: "Unavailable",
-        code: "Unavailable",
-      },
-      {
-        name: "Dropdown",
-        design: "Unavailable",
-        code: "Unavailable",
-      },
-    ]}
-    schema={[
-      {
-        name: "name",
-        displayName: "Component Name",
-        width: "40%",
-        sorting: false,
-        cellRenderer: ({ data }) => {
-          return <Text appearance="link">{data.name}</Text>;
-        },
-      },
-      {
-        name: "design",
-        displayName: "Design",
-        width: "30%",
-        cellType: "STATUS_HINT",
-        sorting: false,
-        translate: (a) => {
-          const design = a.design;
-          return {
-            title: design,
-            statusAppearance:
-              design === "Available"
-                ? "success"
-                : design === "Unavailable"
-                ? "alert"
-                : "info",
-          };
-        },
-      },
-      {
-        name: "code",
-        displayName: "Code",
-        width: "30%",
-        cellType: "STATUS_HINT",
-        sorting: false,
-        translate: (a) => {
-          const code = a.code;
-          return {
-            title: code,
-            statusAppearance:
-              code === "Available"
-                ? "success"
-                : code === "Unavailable"
-                ? "alert"
-                : "info",
-          };
-        },
-      },
-    ]}
+    onRowClick={(props) => {
+      navigate(`/components/${props.link.toLowerCase()}`);
+    }}
+    data={data}
+    schema={schema}
+    withPagination={false}
   />
 </Card>

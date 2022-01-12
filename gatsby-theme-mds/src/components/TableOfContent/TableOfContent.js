@@ -77,9 +77,9 @@ const TableOfContent = (props) => {
   function renderItems(items) {
     return (
       <ul className='table-of-content-list pr-8'>
-        {items && items.map((item) => {
+        {items && items.map((item, key) => {
           return (
-            <li>
+            <li key={key}>
               <div
                 className={`${active == item.url.slice(1) ? 'active-link' : ''
                   }`}

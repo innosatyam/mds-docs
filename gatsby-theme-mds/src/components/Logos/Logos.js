@@ -13,7 +13,7 @@ import { useLogoItems } from '../../util/Logos';
 const ProductLogos = (props) => {
   const nodes = useLogoItems();
 
-  const { logoData, toggleToast } = props;
+  const { logoData } = props;
 
   return logoData.map((elt) => {
     const filteredGatsbyImage = nodes.filter((img) => {

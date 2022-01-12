@@ -210,7 +210,7 @@ const Layout = ({
           pageTitle={pageTitle}
           showMobile={showMobile}
         />
-        <Column className="page-animation page-scroll h-100">
+        <Column className="page-scroll h-100">
           <Row>
             <Column className="px-12 py-8 min-vh-100" size={9}>
               {!relativePagePath.includes('components') && (

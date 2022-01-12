@@ -56,8 +56,8 @@ const ComponentsContainer = ({
             activeIndex={activeIndex}
             onTabChange={onTabChangeHandler}
           >
-            {tabs.map((tab) => (
-              <Tab label={tab}></Tab>
+            {tabs.map((tab, index) => (
+              <Tab label={tab} key={index}></Tab>
             ))}
           </Tabs>
         </div>
