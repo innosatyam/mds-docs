@@ -12,10 +12,6 @@ import { data, schema } from "../../../../data/components/index.js";
   <Table
     showMenu={false}
     type="resource"
-    withHeader={true}
-    headerOptions={{
-      withSearch: true,
-    }}
     onRowClick={(props) => {
       navigate(`/components/${props.link.toLowerCase()}`);
     }}

@@ -1501,10 +1501,10 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@innovaccer/design-system@2.7.0-0":
-  version "2.7.0-0"
-  resolved "https://registry.yarnpkg.com/@innovaccer/design-system/-/design-system-2.7.0-0.tgz#5e653e54f6ab4538e5af0d6fbdb3ebbab15483a6"
-  integrity sha512-9JT4o0joaEl6K0pxzpmyLaU0v9kKzXUw2sK++kkELlNh9HYJaRDMZt1qvIirNIQh6HE0BIdMfXAUQtibsTVvLQ==
+"@innovaccer/design-system@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@innovaccer/design-system/-/design-system-2.7.0.tgz#80050af947da1862cf923d94d4a6d919214dcf6a"
+  integrity sha512-HK7OsYE/jdrGbhOSYQ1W7fGhAJ05KPGbmsqhymTn5pjeIDYcPHHe95pLnB2NeJYA3bNlVC6TEsSLFH7PqBFb0Q==
   dependencies:
     classnames "^2.3.1"
     core-js "^3.9.1"
@@ -4009,6 +4009,14 @@ create-gatsby@^1.14.0:
   integrity sha512-ba081Li7A7T7cHmcoE4oL+MO12k4ck5MWENPcuF9U8fTbOfICf+r3S0Mr+35YKbxr0w25RzhN5VcOS3+rokgbA==
   dependencies:
     "@babel/runtime" "^7.15.4"
+
+create-react-context@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.3.0.tgz#546dede9dc422def0d3fc2fe03afe0bc0f4f7d8c"
+  integrity sha512-dNldIoSuNSvlTJ7slIKC/ZFGKexBMBrrcc+TTe1NdmROnaASuLPvqpwj9v4XS4uXZ8+YPu0sNmShX2rXI5LNsw==
+  dependencies:
+    gud "^1.0.0"
+    warning "^4.0.3"
 
 create-require@^1.1.0:
   version "1.1.1"
@@ -10413,6 +10421,19 @@ react-live@^2.3.0:
     prop-types "^15.7.2"
     react-simple-code-editor "^0.11.0"
     unescape "^1.0.1"
+
+react-popper@1.3.7:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.3.7.tgz#f6a3471362ef1f0d10a4963673789de1baca2324"
+  integrity sha512-nmqYTx7QVjCm3WUZLeuOomna138R1luC4EqkW3hxJUrAe+3eNz3oFCLYdnPwILfn0mX1Ew2c3wctrjlUMYYUww==
+  dependencies:
+    "@babel/runtime" "^7.1.2"
+    create-react-context "^0.3.0"
+    deep-equal "^1.1.1"
+    popper.js "^1.14.4"
+    prop-types "^15.6.1"
+    typed-styles "^0.0.7"
+    warning "^4.0.2"
 
 react-popper@^1.3.7:
   version "1.3.11"
