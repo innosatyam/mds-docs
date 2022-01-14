@@ -193,6 +193,18 @@ const Layout = ({
     Rectangle: (props) => <Rectangle {...props} />,
     Colors: (props) => <Colors {...props} />,
   };
+
+  const showAnimation = () => {
+    //show animation for only first tab or pages without tabs
+
+    const { tabs } = frontmatter;
+    const name = relativePagePath.slice(relativePagePath.lastIndexOf('/') + 1, relativePagePath.lastIndexOf('.mdx'));
+    if (tabs?.length && name !== tabs[0].toLowerCase().split(' ').join('-')) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <>
       <Meta
@@ -213,7 +225,7 @@ const Layout = ({
           showMobile={showMobile}
           frontmatter={frontmatter}
         />
-        <Column className="page-scroll h-100">
+        <Column className={`${showAnimation() ? "page-animation" : ''} page-scroll h-100`}>
           <Row>
             <Column className="px-12 py-8 min-vh-100" size={9}>
               {!relativePagePath.includes('components') && (
