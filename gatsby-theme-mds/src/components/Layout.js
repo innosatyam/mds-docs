@@ -29,6 +29,7 @@ import ProductColors from '../components/Colors/Colors';
 import { getStorybookData } from '../util/StorybookData';
 import { ArgsTable } from '../components/PropsTable/Table';
 import Markdown from 'markdown-to-jsx';
+import { useFrontmatter } from '../util/Frontmatter';
 
 const copyToClipboard = (str) => {
   let codeBlock = '';
@@ -92,6 +93,7 @@ const Layout = ({
   const is404 = children && children.key === null;
   const [isToastActive, setIsToastActive] = useState(false);
   const [toastTitle, setToastTitle] = useState('');
+  const frontmatter = useFrontmatter(relativePagePath);
 
   function getJsxCode(name) {
     const componentData = getStorybookData(name);
@@ -209,6 +211,7 @@ const Layout = ({
           relativePagePath={relativePagePath}
           pageTitle={pageTitle}
           showMobile={showMobile}
+          frontmatter={frontmatter}
         />
         <Column className="page-scroll h-100">
           <Row>
@@ -220,6 +223,7 @@ const Layout = ({
                   tabs={tabs}
                   pageDescription={pageDescription}
                   logos={logos}
+                  frontmatter={frontmatter}
                 >
                   <MDXProvider components={DSComponents}>
                     {children}
@@ -233,6 +237,7 @@ const Layout = ({
                   component={component}
                   tabs={tabs}
                   pageDescription={pageDescription}
+                  frontmatter={frontmatter}
                 >
                   <MDXProvider components={DSComponents}>
                     {children}

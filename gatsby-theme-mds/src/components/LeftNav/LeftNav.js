@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useNavItems } from '../../util/NavItems';
 import {
   VerticalNav,
@@ -11,14 +11,13 @@ import { MOBILE } from '../../util/constants';
 const isBrowser = typeof window !== 'undefined';
 
 const LeftNav = (props) => {
-  const { relativePagePath, showMobile } = props;
-  let navItems = useNavItems(relativePagePath);
-  
-  const [expanded, setExpanded] = React.useState(true);
-
-  let activeMenu;
+  const { relativePagePath, showMobile, frontmatter } = props;
+  const navItems = useNavItems(relativePagePath);
+  const showMenuButtons = showMobile || frontmatter?.showMobile;
+  const [active, setActive] = React.useState();
 
   function getActiveNavItem() {
+    let activeMenu;
     if (
       isBrowser &&
       window.location.pathname &&
@@ -39,11 +38,9 @@ const LeftNav = (props) => {
     }
   }
 
-  const [active, setActive] = React.useState();
-
   useEffect(() => {
     const active = isBrowser ? getActiveNavItem() : '';
-    const obj = {link: active}
+    const obj = { link: active }
     setActive(obj);
   }, []);
 
@@ -72,7 +69,7 @@ const LeftNav = (props) => {
 
   return (
     <div className='h-100 bg-secondary-lightest border-right'>
-      {showMobile && (
+      {showMenuButtons && (
         <div className='d-flex pt-6 pl-6'>
           <Button
             appearance='basic'
@@ -80,7 +77,7 @@ const LeftNav = (props) => {
             className='mr-4'
             onClick={() => handleNavigate()}
             selected={!relativePagePath.includes(MOBILE)}
-            expanded
+            expanded={true}
           >
             Web
           </Button>
@@ -89,7 +86,7 @@ const LeftNav = (props) => {
             onClick={() => handleNavigate(MOBILE)}
             selected={relativePagePath.includes(MOBILE)}
             className='mr-6'
-            expanded
+            expanded={true}
           >
             Mobile
           </Button>
@@ -102,7 +99,7 @@ const LeftNav = (props) => {
         menus={navItems}
         active={active}
         onClick={onClickHandler}
-        expanded={expanded}
+        expanded={true}
         autoCollapse={false}
       />
     </div>

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Heading,
   Tabs,
   Tab,
+  Paragraph
 } from '@innovaccer/design-system';
 import { navigate } from 'gatsby';
 
@@ -12,12 +13,15 @@ const ComponentsContainer = ({
   relativePagePath,
   tabs,
   pageDescription,
+  frontmatter
 }) => {
   const page = relativePagePath.split('/');
   const pageName = page[page.length - 1].split('.')[0];
+  const isSiblingTab = relativePagePath.split('.')[0] === '/' + pageTitle.replace(/\s/g, '');
+  const tabsList = isSiblingTab ? frontmatter?.tabs : tabs;
 
   const getTabSlug = (tabIndex) => {
-    const tabName = tabs[tabIndex];
+    const tabName = tabsList[tabIndex];
     let tabSlug = '';
     if (tabName.length) {
       tabSlug = tabName.toLowerCase().replace(/\s/g, '-');
@@ -26,8 +30,8 @@ const ComponentsContainer = ({
   };
 
   const activeTab =
-    tabs && tabs.length
-      ? tabs.findIndex(
+    tabsList && tabsList.length
+      ? tabsList.findIndex(
         (tab, index) =>
           getTabSlug(index) === pageName.toLowerCase()
       )
@@ -48,15 +52,16 @@ const ComponentsContainer = ({
 
   return (
     <>
-      <Heading>{pageTitle}</Heading>
-      <p>{pageDescription}</p>
-      {tabs && tabs.length && (
+      <Heading>{isSiblingTab ? frontmatter?.title : pageTitle}</Heading>
+      <Paragraph>{isSiblingTab ? frontmatter?.description : pageDescription}</Paragraph>
+
+      {tabsList && tabsList.length && (
         <div className='mb-7 mt-4'>
           <Tabs
             activeIndex={activeIndex}
             onTabChange={onTabChangeHandler}
           >
-            {tabs.map((tab, index) => (
+            {tabsList.map((tab, index) => (
               <Tab label={tab} key={index}></Tab>
             ))}
           </Tabs>

@@ -16,27 +16,31 @@ const Container = ({
   relativePagePath,
   pageDescription,
   logos,
+  frontmatter
 }) => {
   const nodes = useLogoItems();
-
   const page = relativePagePath.split('/');
   const pageName = page[page.length - 1].split('.')[0];
 
+  const isSiblingTab = relativePagePath.split('.')[0] === '/' + pageTitle.replace(/\s/g, '');
+  const tabsList = isSiblingTab ? frontmatter?.tabs : tabs;
+  const logoList = isSiblingTab ? frontmatter?.logos : logos;
+
   const getTabSlug = (tabIndex) => {
-    const tabName = tabs[tabIndex];
+    const tabName = tabsList[tabIndex];
     let tabSlug = '';
     if (tabName.length) {
       tabSlug = tabName.toLowerCase().replace(/\s/g, '-');
     }
     return tabSlug;
   };
-  
+
   const activeTab =
-    tabs && tabs.length
-      ? tabs.findIndex(
-          (tab, index) =>
-            getTabSlug(index) === pageName.toLowerCase()
-        )
+    tabsList && tabsList.length
+      ? tabsList.findIndex(
+        (tab, index) =>
+          getTabSlug(index) === pageName.toLowerCase()
+      )
       : '';
 
   const [activeIndex, setActiveIndex] = React.useState(
@@ -53,7 +57,7 @@ const Container = ({
   };
 
   const downloadAllLogos = () => {
-    const images = logos.map((logo) => {
+    const images = logoList.map((logo) => {
       const filteredGatsbyImage = nodes.filter((img) =>
         img.fluid.src.includes(logo)
       );
@@ -77,9 +81,9 @@ const Container = ({
   return (
     <>
       <Heading size='xl' className='my-5'>
-        {pageTitle}
+        {isSiblingTab ? frontmatter?.title : pageTitle}
       </Heading>
-      {logos && logos.length && (
+      {logoList && logoList.length && (
         <Button
           className='download-logos'
           icon='download'
@@ -88,15 +92,15 @@ const Container = ({
           Download all
         </Button>
       )}
-      {tabs && tabs.length && (
+      {tabsList && tabsList.length && (
         <>
-          <Paragraph>{pageDescription}</Paragraph>
+          <Paragraph>{isSiblingTab ? frontmatter?.description : pageDescription}</Paragraph>
           <Tabs
             activeIndex={activeIndex}
             onTabChange={onTabChangeHandler}
             className='mb-6 mt-4'
           >
-            {tabs.map((tab) => (
+            {tabsList.map((tab) => (
               <Tab label={tab}></Tab>
             ))}
           </Tabs>
