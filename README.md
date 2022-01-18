@@ -13,8 +13,20 @@
 
 ## 🚀 Get Up and Running
 
+> If you use npm install yarn by following command
+
+```bash
+npm install -g yarn
+```
+
+Install dependencies
+
 ```bash
 yarn
+```
 
+Start development server
+
+```bash
 yarn develop
 ```
