@@ -3,8 +3,8 @@ import { Card, CardBody, Row, Column, Heading, Input, } from '@innovaccer/design
 import { Link } from 'gatsby';
 
 import './overview.css';
-import { debounce } from '../../../../util/Helpers';
-import { data } from '../../../../data/components/index.js';
+import { debounce } from '../../../util/Helpers';
+import { data } from '../../../data/components/index.js';
 
 function Overview() {
 

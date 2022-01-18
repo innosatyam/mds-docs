@@ -10,7 +10,6 @@ export function useFrontmatter(relativePagePath) {
           node {
             slug
             frontmatter {
-              component
               date
               description
               logos
