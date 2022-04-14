@@ -1,13 +1,13 @@
 base: content
 menus:
   - label: Voice and tone guidelines
-    link: /content/voice-and-tone-guidelines/tabs/voice-and-tone/
+    link: /content/voice-and-tone-guidelines/voice-and-tone/
 
   - label: House rules
-    link: /content/house-rules/tabs/basics
+    link: /content/house-rules/basics
 
   - label: Button guidelines
-    link: /content/button-guidelines/tabs/confusing-buttons/
+    link: /content/button-guidelines/confusing-buttons/
 
   - label: Email guidelines
     link: /content/email-guidelines/
